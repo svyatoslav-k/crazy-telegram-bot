@@ -16,7 +16,7 @@ bot = telebot.TeleBot(token)
 chat_id = None
 footballers = set()
 not_footballers = set()
-footballers_test = {'Добромир', 'Святослав', 'Алексей', 'Артем', 'Сергей', 'Вадим', 'Александр'}
+footballers_test = {'Добромир', 'Святослав', 'Алексей', 'Артем', 'Сергей', 'Вадим', 'Александр', '+1 Святослав', '+1 Александр'}
 
 
 def job():
@@ -70,7 +70,7 @@ def handle_poll_answer(answer):
     else:
         player_name = answer.user.id
 
-    player_name = player_name[:12] if len(player_name) > 12 else player_name
+    player_name = player_name[:10] if len(player_name) > 10 else player_name
 
     if answer.option_ids == [0]:
         footballers.add(player_name)
@@ -79,6 +79,8 @@ def handle_poll_answer(answer):
         footballers.add('+1 ' + player_name)
     elif answer.option_ids == [2]:
         not_footballers.add(player_name)
+    elif answer.option_ids == [3]:
+        footballers.add('+1 ' + player_name)
     elif answer.option_ids == []:
         if player_name in footballers:
             footballers.remove(player_name)
@@ -93,7 +95,7 @@ def handle_poll_answer(answer):
 def send_wednesday_poll():
     global chat_id
     if chat_id is not None:
-        poll_message = bot.send_poll(chat_id, 'Играешь в среду?', ['Да', 'Да, со мной +1', 'Нет'], is_anonymous=False)
+        poll_message = bot.send_poll(chat_id, 'Играешь в среду?', ['Да', 'Да, со мной +1', 'Нет', 'Нет, от меня +1'], is_anonymous=False)
         bot.pin_chat_message(chat_id, poll_message.message_id)
 
 
@@ -127,11 +129,11 @@ def make_message_teams(team_1, team_2) -> str:
     team_1=list(team_1)
     team_2=list(team_2)
 
-    message = "<pre>\n" + "🦺{:<20}👕{:<20}\n".format(' Команда 1', ' Команда 2')
+    message = "<pre>\n" + "🦺{:<13}👕{:<13}\n".format(' Команда 1', ' Команда 2')
     for player1, player2 in zip_longest(team_1, team_2, fillvalue=''):
         prefix_1 = '•' if player1 != '' else ''
         prefix_2 = '•' if player2 != '' else ''
-        message += (prefix_1 + '{:<20} ' + prefix_2 + '{:<20}\n').format(player1, player2)
+        message += (prefix_1 + '{:<13} ' + prefix_2 + '{:<13}\n').format(player1, player2)
     message += "</pre>"
 
     return message

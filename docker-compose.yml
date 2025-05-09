@@ -3,7 +3,7 @@ version: '3.8'
 services:
   crazy-telegram-bot:
     build: .
-    image: svyatoslav89/crazy-telegram-bot:0.0.4
+    image: svyatoslav89/crazy-telegram-bot:0.0.7
     container_name: crazy-telegram-bot
     env_file:
       - .env
